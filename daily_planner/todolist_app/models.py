@@ -5,16 +5,22 @@ from django.utils import timezone
 class Category(models.Model):
     name = models.CharField(max_length=50)
 
+    class Meta:
+        ordering = ('name',)
+
     def __str__(self):
         return self.name
 
 
 class Task(models.Model):
-    category = models.ForeignKey(Category, default="General", on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, default="general",
+                                 on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
-    description = models.TextField()
-    date = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True)
     completed = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ('created',)
 
     def __str__(self):
         return self.title
