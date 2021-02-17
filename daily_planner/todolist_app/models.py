@@ -13,14 +13,13 @@ class Category(models.Model):
 
 
 class Task(models.Model):
-    category = models.ForeignKey(Category, default="general",
-                                 on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, default="General", on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     created = models.DateTimeField(auto_now_add=True)
-    completed = models.BooleanField(default=False)
+    completed = models.BooleanField(default=False, blank=True, null=True)
 
     class Meta:
-        ordering = ('created',)
+        ordering = ('-created',)
 
     def __str__(self):
         return self.title
