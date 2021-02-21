@@ -1,11 +1,11 @@
 from django.urls import path
+from rest_framework.urlpatterns import format_suffix_patterns
 
-from . import views
+from .views import ListTask, DetailTask
 
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('edit/<int:pk>/', views.edit_task, name='edit_task'),
-    path('delete/<int:pk>/', views.delete_task, name='delete_task'),
-    path('complete/<int:pk>/', views.mark_complete, name='complete'),
-    path('incomplete/<int:pk>/', views.mark_incomplete, name='incomplete'),
+    path('', ListTask.as_view()),
+    path('<int:pk>/', DetailTask.as_view()),
 ]
+
+urlpatterns = format_suffix_patterns(urlpatterns)

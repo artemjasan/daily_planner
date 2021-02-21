@@ -1,10 +1,17 @@
-from django.shortcuts import render, redirect
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from rest_framework import generics
+
 from .models import Task
-from .forms import TaskForm
+from .serializers import TasksSeralizer
 
 
+class ListTask(generics.ListCreateAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TasksSeralizer
+
+
+class DetailTask(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TasksSeralizer
 '''
 def index(request):
     form = TaskForm()
