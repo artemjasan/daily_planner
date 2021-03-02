@@ -1,22 +1,30 @@
 from django.db import models
 from django.utils import timezone
-
-
-class Category(models.Model):
-    name = models.CharField(max_length=50)
-
-    class Meta:
-        ordering = ('name',)
-
-    def __str__(self):
-        return self.name
+from django.utils.translation import gettext_lazy as _
 
 
 class Task(models.Model):
-    category = models.ForeignKey(Category, default="General", on_delete=models.CASCADE)
+    class TaskCategories(models.TextChoices):
+        GENERAL = "General", _('General')
+        HOLIDAYS = "Holidays", _('Holidays')
+        FOOD = "Food", _('Food')
+        CAR = "CAR", _('CAR')
+        LIVING = "Living", _('Living')
+        HOBBIES = "Hobbies", _('Hobbies')
+        SHOPPING = "Shopping", _('Shopping')
+        EDUCATION = "Education", _('Education')
+        HEALTH = "Health", _('Health')
+
+    class TaskPriority(models.TextChoices):
+        LOW = "Low", _('Low')
+        NORMAL = "Normal", _('Normal')
+        High = "High", _('High')
+
+    category = models.CharField(max_length=30, choices=TaskCategories.choices, default=TaskCategories.GENERAL)
+    priority = models.CharField(max_length=10, choices=TaskPriority.choices, default=TaskPriority.LOW)
     title = models.CharField(max_length=100)
     created = models.DateTimeField(auto_now_add=True)
-    completed = models.BooleanField(default=False, blank=True, null=True)
+    completed = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('-created',)
