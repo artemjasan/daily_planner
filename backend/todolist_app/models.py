@@ -4,21 +4,21 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Task(models.Model):
-    class TaskCategories(models.TextChoices):
-        GENERAL = "General", _('General')
-        HOLIDAYS = "Holidays", _('Holidays')
-        FOOD = "Food", _('Food')
-        CAR = "CAR", _('CAR')
-        LIVING = "Living", _('Living')
-        HOBBIES = "Hobbies", _('Hobbies')
-        SHOPPING = "Shopping", _('Shopping')
-        EDUCATION = "Education", _('Education')
-        HEALTH = "Health", _('Health')
+    class TaskCategories(models.IntegerChoices):
+        GENERAL = 1, _('General')
+        HOLIDAYS = 2, _('Holidays')
+        FOOD = 3, _('Food')
+        CAR = 4, _('Car')
+        LIVING = 5, _('Living')
+        HOBBIES = 6, _('Hobbies')
+        SHOPPING = 7, _('Shopping')
+        EDUCATION = 8, _('Education')
+        HEALTH = 9, _('Health')
 
-    class TaskPriority(models.TextChoices):
-        LOW = "Low", _('Low')
-        NORMAL = "Normal", _('Normal')
-        High = "High", _('High')
+    class TaskPriority(models.IntegerChoices):
+        LOW = 1, _('Low')
+        NORMAL = 2, _('Normal')
+        HIGH = 3, _('High')
 
     category = models.CharField(max_length=30, choices=TaskCategories.choices, default=TaskCategories.GENERAL)
     priority = models.CharField(max_length=10, choices=TaskPriority.choices, default=TaskPriority.LOW)
