@@ -19,7 +19,7 @@ class DetailTask(generics.RetrieveUpdateDestroyAPIView):
 class CategoriesList(APIView):
     def get(self, request, format=None):
         categories_dict = {
-            int: str for int, str in Task.TaskCategories.choices
+            choice_id: choice_title for choice_id, choice_title in Task.TaskCategories.choices
         }
         return Response(categories_dict)
 
@@ -27,6 +27,6 @@ class CategoriesList(APIView):
 class PrioritiesList(APIView):
     def get(self, request, format=None):
         priority_dict = {
-            int: str for int, str in Task.TaskPriority.choices
+            choice_id: choice_title for choice_id, choice_title in Task.TaskPriority.choices
         }
         return Response(priority_dict)

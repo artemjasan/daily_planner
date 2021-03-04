@@ -20,8 +20,8 @@ class Task(models.Model):
         NORMAL = 2, _('Normal')
         HIGH = 3, _('High')
 
-    category = models.CharField(max_length=30, choices=TaskCategories.choices, default=TaskCategories.GENERAL)
-    priority = models.CharField(max_length=10, choices=TaskPriority.choices, default=TaskPriority.LOW)
+    category = models.PositiveSmallIntegerField(choices=TaskCategories.choices, default=TaskCategories.GENERAL)
+    priority = models.PositiveSmallIntegerField(choices=TaskPriority.choices, default=TaskPriority.LOW)
     title = models.CharField(max_length=100)
     created = models.DateTimeField(auto_now_add=True)
     completed = models.BooleanField(default=False)
