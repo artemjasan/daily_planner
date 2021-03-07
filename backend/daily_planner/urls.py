@@ -3,6 +3,7 @@ from django.urls import include, path
 
 api_v1_patterns = [
     path('todo_list/', include('todolist_app.urls')),
+    path('weather/', include('weather_app.urls')),
 ]
 
 urlpatterns = [
