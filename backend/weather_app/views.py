@@ -2,6 +2,7 @@ import requests
 from django.http import Http404
 
 from django.shortcuts import render
+from rest_framework import generics
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -16,6 +17,11 @@ API_ID = "appid=74fda670f4fb3091728731208163e6d8"
 api_call = f"{URL_API}&{UNIT_SYSTEM}&{API_ID}"
 
 
+class CitiesList(generics.ListCreateAPIView):
+    queryset = City.objects.all()
+    serializer_class = CitySerializer
+
+"""
 class WeatherList(APIView):
     def get(self, request, format=None):
         cities = City.objects.all()
@@ -45,10 +51,6 @@ class WeatherList(APIView):
 
 
 class WeatherDetail(APIView):
-    """
-      Retrieve, update or delete a snippet instance.
-    """
-
     def get_object(self, pk):
         try:
             return City.objects.get(pk=pk)
@@ -83,3 +85,4 @@ class WeatherDetail(APIView):
         city = self.get_object(pk)
         city.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+"""
