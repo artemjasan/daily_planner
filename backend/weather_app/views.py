@@ -15,14 +15,19 @@ API_CALL = f"{URL_API}&{UNIT_SYSTEM}&{API_ID}"
 
 
 def call_api(city_name):
-    current_weather = requests.get(API_CALL.format(city_name)).json()
-    weather_data = {
-        "city": city_name,
-        "temperature": current_weather["main"]["temp"],
-        "description": current_weather["weather"][0]["description"],
-        "icon": current_weather["weather"][0]["icon"]
+    city_weather = requests.get(API_CALL.format(city_name)).json()
+    if city_weather["cod"] == 200:
+        weather_data = {
+            "city": city_name,
+            "temperature": city_weather["main"]["temp"],
+            "description": city_weather["weather"][0]["description"],
+            "icon": city_weather["weather"][0]["icon"]
+        }
+        return weather_data
+    err_msg = {
+        "message": f'City {city_name} does not exist in this world!'
     }
-    return weather_data
+    return err_msg
 
 
 class ListCity(generics.ListCreateAPIView):
