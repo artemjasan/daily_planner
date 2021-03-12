@@ -1,11 +1,9 @@
 import requests
-from django.http import Http404
 
-from django.shortcuts import render
 from rest_framework import generics
 from rest_framework import status
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from .models import City
 from .serializer import CitySerializer
@@ -13,76 +11,39 @@ from .serializer import CitySerializer
 URL_API = "http://api.openweathermap.org/data/2.5/weather?q={}"
 UNIT_SYSTEM = "units=metric"
 API_ID = "appid=74fda670f4fb3091728731208163e6d8"
+API_CALL = f"{URL_API}&{UNIT_SYSTEM}&{API_ID}"
 
-api_call = f"{URL_API}&{UNIT_SYSTEM}&{API_ID}"
+
+def call_api(city_name):
+    current_weather = requests.get(API_CALL.format(city_name)).json()
+    weather_data = {
+        "city": city_name,
+        "temperature": current_weather["main"]["temp"],
+        "description": current_weather["weather"][0]["description"],
+        "icon": current_weather["weather"][0]["icon"]
+    }
+    return weather_data
 
 
-class CitiesList(generics.ListCreateAPIView):
+class ListCity(generics.ListCreateAPIView):
     queryset = City.objects.all()
     serializer_class = CitySerializer
 
-"""
-class WeatherList(APIView):
-    def get(self, request, format=None):
-        cities = City.objects.all()
-        serializator = CitySerializer(cities, many=True)
+
+class DetailCity(generics.RetrieveUpdateDestroyAPIView):
+    queryset = City.objects.all()
+    serializer_class = CitySerializer
+
+
+class CityWeather(GenericAPIView):
+    queryset = City.objects.values_list("name", flat=True)
+
+    def get(self, request):
+        cities = self.get_queryset()
         weather_data = []
 
         for city in cities:
-            req = requests.get(api_call.format(city)).json()
-
-            city_weather = {
-                "id": city.id,
-                "city": city.name,
-                "temperature": req["main"]["temp"],
-                "description": req["weather"][0]["description"],
-                "icon": req["weather"][0]["icon"]
-            }
-
+            city_weather = call_api(city)
             weather_data.append(city_weather)
+
         return Response(weather_data)
-
-    def post(self, request, format=None):
-        serializer = CitySerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class WeatherDetail(APIView):
-    def get_object(self, pk):
-        try:
-            return City.objects.get(pk=pk)
-        except City.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk, format=None):
-        weather_data = []
-        city = self.get_object(pk)
-        req = requests.get(api_call.format(city)).json()
-        city_weather = {
-            "id": city.id,
-            "city": city.name,
-            "temperature": req["main"]["temp"],
-            "description": req["weather"][0]["description"],
-            "icon": req["weather"][0]["icon"]
-        }
-        weather_data.append(city_weather)
-        #serializer = CitySerializer(city)
-        #return Response(serializer.data)
-        return Response(weather_data)
-
-    def put(self, request, pk, format=None):
-        city = self.get_object(pk)
-        serializer = CitySerializer(city, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        city = self.get_object(pk)
-        city.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-"""
