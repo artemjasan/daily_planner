@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
     # local app:
     'todolist_app',
+    'weather_app',
 ]
 
 MIDDLEWARE = [
