@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python backend/manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - db
+    environment:
+      POSTGRES_HOST: db
+    volumes:
+      - ./backend:/daily_planner/backend
+    ports:
+      - "8000:8000"
+    container_name: daily_planner_backend_web
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: pg_isready -U postgres
+      timeout: 20s
+      retries: 3
+    container_name: daily_planner_backend_db
